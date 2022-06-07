@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  version: '2022-06-07'
+  title: data-recsys-biz-api
+  description: An API that generates recommendation to the user, given their user_id.
+servers:
+  - url: https://dummy-dev.com.my/api
+    description: Development API
+paths:
+  /{user_id}:
+    post:
+      summary: Returns a list of recommendations.
+      # description: Optional extended description in CommonMark or HTML.
+      parameters:
+        - name: x-api-key
+          in: header
+          description: API key required for invocation.
+          required: true
+          schema:
+            type: string
+            example: "ztWgUIjTWl328NmOQoHtOaIdJCgvk2QK6yrNKgkI"
+        - name: user_id
+          in: path
+          description: PGUTID.
+          required: true
+          schema:
+            type: string
+            example: "test_user_lby"
+        - name: count
+          in: query
+          description: Count of recommendations required.
+          required: true
+          schema:
+            type: integer
+            example: 20
+      requestBody:
+        description: Request body consisting the user's inputs.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                idType:
+                  type: string
+                  example: "PGUTID"
+                market:
+                  type: string
+                  example: "SG"
+                clientApp:
+                  type: string
+                  example: "SRP"
+                clientDomain:
+                  type: string
+                  example: "PG"
+                listingMarket:
+                  type: string
+                  example: "residential"
+                listingType:
+                  type: string
+                  example: "rent"
+                districtCode:
+                  type: string
+                  example: "D10"
+                minPrice:
+                  type: integer
+                  example: 0
+                maxPrice:
+                  type: integer
+                  example: 10000000
+                propertyType:
+                  type: string
+                recommendationType:
+                  type: string
+              required:
+                - idType
+                - market
+                - clientApp
+                - clientDomain
+                - listingMarket
+                - listingType
+                - districtCode
+      responses:
+        '200':    # status code
+          description: The response payload.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    example: "The user ID exist."
+                  recommendationType:
+                    type: string
+                    example: "Personalised."
+                  is_from_cache:
+                    type: boolean
+                    example: true
+                  sm_model:
+                    type: string
+                    example: "listing_id_condo_hdb_rent_sg"
+                  recommendations:
+                    type: array
+                    items:
+                      type: string
+                  payloads:
+                    type: object
